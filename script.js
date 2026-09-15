@@ -1,28 +1,25 @@
 // script.js
-document.querySelector('form').addEventListener('submit', async (e) => {
+const contactForm = document.getElementById('contactForm');
+const formStatus = document.getElementById('formStatus');
+
+contactForm.addEventListener('submit', async (e) => {
   e.preventDefault();
 
-  // 1. Find the selected project type (handling radio buttons or checkboxes)
-  const selectedType = e.target.querySelector('input[name="projectType"]:checked');
-  const projectType = selectedType ? selectedType.value : 'Not Specified';
-
-  // 2. Gather all input values
-  // Make sure your HTML inputs have matching ID attributes (id="name", id="email", id="brief")
   const formData = {
-    name: document.getElementById('name').value,
-    email: document.getElementById('email').value,
-    projectType: projectType,
-    message: document.getElementById('brief').value // your project brief textarea
+    name: document.getElementById('cf-name').value.trim(),
+    email: document.getElementById('cf-email').value.trim(),
+    projectType: document.getElementById('cf-type').value,
+    message: document.getElementById('cf-message').value.trim()
   };
 
-  // 3. Change button to loading state
-  const submitBtn = e.target.querySelector('button[type="submit"]') || e.target.querySelector('button');
+  const submitBtn = contactForm.querySelector('button[type="submit"]');
   const originalBtnText = submitBtn.innerText;
   submitBtn.innerText = 'Sending Brief...';
   submitBtn.disabled = true;
+  formStatus.className = 'form-status';
+  formStatus.textContent = 'Sending...';
 
   try {
-    // 4. Secure post request to Vercel
     const response = await fetch('/api/send-email', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -31,16 +28,17 @@ document.querySelector('form').addEventListener('submit', async (e) => {
 
     const result = await response.json();
 
-    if (result.success) {
-      alert('Project brief sent successfully! I will look over it shortly.');
-      e.target.reset(); // clear form inputs
+    if (!response.ok || !result.success) {
+      throw new Error(result.error || 'Unable to send the project brief');
     } else {
-      alert('Failed to send brief. Please try again or reach out on WhatsApp.');
+      formStatus.textContent = 'Message sent. I will reply soon.';
+      formStatus.classList.add('ok');
+      contactForm.reset();
     }
   } catch (error) {
-    alert('A connection error occurred. Please check your network.');
+    formStatus.textContent = 'Something went wrong. Please email hkhanservices@gmail.com directly.';
+    formStatus.classList.add('err');
   } finally {
-    // 5. Restore button state
     submitBtn.innerText = originalBtnText;
     submitBtn.disabled = false;
   }

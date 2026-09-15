@@ -1078,17 +1078,6 @@
   <img id="lightboxImg" src="" alt="">
 </div>
 
-<!-- ======================================================================
-     EMAILJS SETUP (required to make the contact form send real emails)
-     1. Create a free account at https://www.emailjs.com
-     2. Add an Email Service (e.g. Gmail) — copy its Service ID
-     3. Create an Email Template with variables: from_name, reply_to, project_type, message — copy its Template ID
-     4. Copy your Public Key from Account > API Keys
-     5. Replace the three placeholders below: YOUR_PUBLIC_KEY, YOUR_SERVICE_ID, YOUR_TEMPLATE_ID
-     Until these are filled in, the form will show a friendly error and the person can still email you directly.
-     ====================================================================== -->
-<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
-
 <script>
   // ---- Availability banner ----
   const availabilityBar = document.getElementById('availabilityBar');
@@ -1158,48 +1147,8 @@
   lightbox.addEventListener('click', (e)=>{ if(e.target === lightbox) closeLightbox(); });
   document.addEventListener('keydown', (e)=>{ if(e.key === 'Escape') closeLightbox(); });
 
-  // ---- Contact form (EmailJS) ----
-  const EMAILJS_PUBLIC_KEY = 'YOUR_PUBLIC_KEY';
-  const EMAILJS_SERVICE_ID = 'YOUR_SERVICE_ID';
-  const EMAILJS_TEMPLATE_ID = 'YOUR_TEMPLATE_ID';
-
-  const contactForm = document.getElementById('contactForm');
-  const formStatus = document.getElementById('formStatus');
-
-  if (window.emailjs && EMAILJS_PUBLIC_KEY !== 'YOUR_PUBLIC_KEY'){
-    emailjs.init(EMAILJS_PUBLIC_KEY);
-  }
-
-  contactForm.addEventListener('submit', function(e){
-    e.preventDefault();
-    formStatus.className = 'form-status';
-
-    if (EMAILJS_PUBLIC_KEY === 'YOUR_PUBLIC_KEY' || !window.emailjs){
-      const name = document.getElementById('cf-name').value.trim();
-      const email = document.getElementById('cf-email').value.trim();
-      const projectType = document.getElementById('cf-type').value;
-      const message = document.getElementById('cf-message').value.trim();
-      const subject = encodeURIComponent('New ' + projectType + ' project enquiry from ' + name);
-      const body = encodeURIComponent('Name: ' + name + '\nEmail: ' + email + '\nProject type: ' + projectType + '\n\nBrief:\n' + message);
-      formStatus.innerHTML = 'Your email app is ready. <a class="text-link" href="mailto:hkhanservices@gmail.com?subject=' + subject + '&body=' + body + '">Open email draft</a>';
-      formStatus.classList.add('err');
-      return;
-    }
-
-    formStatus.textContent = 'Sending…';
-    emailjs.sendForm(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, contactForm)
-      .then(()=>{
-        formStatus.textContent = 'Message sent — thank you! I\'ll reply soon.';
-        formStatus.classList.add('ok');
-        contactForm.reset();
-      })
-      .catch(()=>{
-        formStatus.textContent = 'Something went wrong — please email hkhanservices@gmail.com directly.';
-        formStatus.classList.add('err');
-      });
-  });
 </script>
-<script src="script.js"> </script>
+<script src="script.js"></script>
 
 </body>
 </html>

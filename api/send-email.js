@@ -10,10 +10,14 @@ export default async function handler(req, res) {
 
   const { name, email, projectType, message } = req.body;
 
+  if (!name || !email || !message) {
+    return res.status(400).json({ error: 'Name, email, and project brief are required' });
+  }
+
   try {
     const data = await resend.emails.send({
       from: 'Portfolio Form <onboarding@resend.dev>',
-      to: 'hkhanservices@gmail.com', // Your actual email address
+      to: 'alxthemes@gmail.com',
       subject: `💼 New Project Brief from ${name}`,
       html: `
         <h3>New Project Inquiry</h3>
@@ -24,6 +28,10 @@ export default async function handler(req, res) {
         <p style="white-space: pre-line; background: #f4f4f4; padding: 10px; border-radius: 5px;">${message}</p>
       `,
     });
+
+    if (data.error) {
+      return res.status(data.error.statusCode || 502).json({ error: data.error.message });
+    }
 
     return res.status(200).json({ success: true, data });
   } catch (error) {
