@@ -14,7 +14,7 @@ export default async function handler(req, res) {
   try {
     const data = await resend.emails.send({
       from: 'Contact Form <onboarding@resend.dev>',
-      to: 'your-personal-email@gmail.com', // Where you want to receive the mail
+      to: 'hkhanservices@gmail.com', // Where you want to receive the mail
       subject: `New Message from ${name}`,
       html: `<p><strong>Email:</strong> ${email}</p><p><strong>Message:</strong> ${message}</p>`,
     });
