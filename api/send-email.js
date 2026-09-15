@@ -13,7 +13,7 @@ export default async function handler(req, res) {
   try {
     const data = await resend.emails.send({
       from: 'Portfolio Form <onboarding@resend.dev>',
-      to: 'alxthemes@gmail.com', // Your actual email address
+      to: 'hkhanservices@gmail.com', // Your actual email address
       subject: `💼 New Project Brief from ${name}`,
       html: `
         <h3>New Project Inquiry</h3>
