@@ -1,7 +1,6 @@
 // api/send-email.js
 import { Resend } from 'resend';
 
-// The RESEND_API_KEY is safely hidden in Vercel's dashboard environment variables
 const resend = new Resend(process.env.RESEND_API_KEY);
 
 export default async function handler(req, res) {
@@ -9,14 +8,21 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  const { name, email, message } = req.body;
+  const { name, email, projectType, message } = req.body;
 
   try {
     const data = await resend.emails.send({
-      from: 'Contact Form <onboarding@resend.dev>',
-      to: 'your-personal-email@gmail.com', // Where you want to receive the mail
-      subject: `New Message from ${name}`,
-      html: `<p><strong>Email:</strong> ${email}</p><p><strong>Message:</strong> ${message}</p>`,
+      from: 'Portfolio Form <onboarding@resend.dev>',
+      to: 'alxthemes@gmail.com', // Your actual email address
+      subject: `💼 New Project Brief from ${name}`,
+      html: `
+        <h3>New Project Inquiry</h3>
+        <p><strong>Name:</strong> ${name}</p>
+        <p><strong>Email:</strong> ${email}</p>
+        <p><strong>Project Type:</strong> ${projectType}</p>
+        <p><strong>Project Brief:</strong></p>
+        <p style="white-space: pre-line; background: #f4f4f4; padding: 10px; border-radius: 5px;">${message}</p>
+      `,
     });
 
     return res.status(200).json({ success: true, data });
